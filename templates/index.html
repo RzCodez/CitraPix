@@ -21,20 +21,20 @@
         <nav>
             <span class="progress-load"></span>
             <div class="menu">
-                <a href="#">About</a>
-                <h1>CitraPix</h1>
-                <a href="#">Github</a>
+                <a href="#" class="slide-up">About</a>
+                <h1 class="slide-up">CitraPix</h1>
+                <a href="#" class="slide-up">Github</a>
             </div>
         </nav>
 
         <div class="hero-section">
-            <p>Aplikasi Pengolah Citra Dari Mahasiswa UPJ!</p>
+            <p class="slide-up">Aplikasi Pengolah Citra Dari Mahasiswa UPJ!</p>
         </div>
+
+
     </body>
 
-    <script>
-        window.onload() = () => {
-            
-        }
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script type="text/javascript" src={{ url_for('static',filename='home.js')}}></script>
+    <script type="text/javascript" src={{ url_for('static',filename='loader.js')}}></script>
 </html>

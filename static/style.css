@@ -30,8 +30,10 @@ nav .progress-load {
     top: 0;
     left: 0;
     right: 0;
-    height: 5px;
+    height: 15px;
     background: #00a6fb;
+    clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+    transition: all 1s cubic-bezier(0.77, 0, 0.18, 1);
 }
 
 nav .menu h1 {
