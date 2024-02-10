@@ -64,7 +64,7 @@
     <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
     <script type="text/javascript" src={{ url_for('static',filename='home.js')}}></script>
     <script type="text/javascript" src={{ url_for('static',filename='loader.js')}}></script>
-    <script>
+    <script type="text/javascript">
         MicroModal.init({
             onShow: modal => console.info(`${modal.id} is shown`), // [1]
             onClose: modal => console.info(`${modal.id} is hidden`), // [2]
