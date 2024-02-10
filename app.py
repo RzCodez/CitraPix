@@ -10,7 +10,3 @@ def home():
 def deblurring():
     return render_template("deblurring.html")
 
-if __name__ == '__main__':
-    app.run()
-
-
