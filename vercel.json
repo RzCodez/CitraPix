@@ -1,0 +1,14 @@
+{
+    "builds": [
+        {
+            "src": "CitraPix.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "CitraPix.py"
+        }
+    ]
+}
