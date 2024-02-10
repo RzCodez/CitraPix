@@ -3,7 +3,7 @@ const progressLoad = document.querySelector(".progress-load");
 window.addEventListener("load", () => {
     progressLoad.style.clipPath = "polygon(100% 0, 0 0, 0 100%, 100% 100%)";
     let tl = gsap.timeline({
-        delay: 1
+        delay: 1,
     });
 
     tl.from(".slide-up", {
@@ -17,13 +17,13 @@ window.addEventListener("load", () => {
         progressLoad.style.opacity = 0;
     }, 1000);
 
-    const a = document.querySelectorAll("a");
+    // const a = document.querySelectorAll("a");
 
-    a.forEach((element) => {
-        element.addEventListener("click", (e) => {
-            e.preventDefault();
-        });
-    });
+    // a.forEach((element) => {
+    //     element.addEventListener("click", (e) => {
+    //         e.preventDefault();
+    //     });
+    // });
 
     // Modal function
     MicroModal.init({
