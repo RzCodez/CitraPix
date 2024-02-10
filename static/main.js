@@ -7,11 +7,11 @@ window.addEventListener("load", () => {
     });
 
     tl.from(".slide-up", {
-        yPercent: 100,
+        yPercent: 30,
         opacity: 0,
         duration: 1,
-        stagger: 0.3,
-        ease: "power4.out",
+        stagger: 0.1,
+        ease: "expo.out",
     });
     setTimeout(() => {
         progressLoad.style.opacity = 0;
