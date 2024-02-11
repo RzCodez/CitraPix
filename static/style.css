@@ -33,7 +33,7 @@ nav .progress-load {
     height: 15px;
     background: #00a6fb;
     clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
-    transition: all 1s cubic-bezier(0.77, 0, 0.18, 1);
+    transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 nav .menu h1 {

@@ -17,4 +17,4 @@ Kami akan mengembangkan aplikasi CitraPix dengan berbagai fitur, seperti:
 
 ### 3. Tech yang digunakan
 
-Aplikasi CitraPix dibangun dengan menggunakan HTML, CSS, JavaScript sebagai Front-End tools, PyScript dan Python sebagai Back-End tools
+Aplikasi CitraPix dibangun dengan menggunakan HTML, CSS, JavaScript sebagai Front-End tools, Python Flask sebagai Back-End tools

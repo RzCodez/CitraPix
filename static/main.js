@@ -17,14 +17,6 @@ window.addEventListener("load", () => {
         progressLoad.style.opacity = 0;
     }, 1000);
 
-    // const a = document.querySelectorAll("a");
-
-    // a.forEach((element) => {
-    //     element.addEventListener("click", (e) => {
-    //         e.preventDefault();
-    //     });
-    // });
-
     // Modal function
     MicroModal.init({
         onShow: (modal) => console.info(`${modal.id} is shown`), // [1]

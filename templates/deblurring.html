@@ -1,12 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-    <script type="text/javascript" src={{ url_for('static',filename='loader.js')}}></script>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="title" content="CitraPix | Aplikasi Pengolahan Citra" />
+        <meta
+            name="description"
+            content="CitraPix adalah sebuah aplikasi pengolah citra berbasis web app yang dikhususkan untuk mengubah dan mengatur pemrosesan dalam gambar, layaknya seperti aplikasi editing pada umumnya."
+        />
+        <meta
+            name="keywords"
+            content="Pengolahan Citra,Web App,Image Processing,Universitas Pembangunan Jaya,UPJ,Artifical Intelligence,Python App,Python,Web Application"
+        />
+        <!-- <meta name="robots" content="index, follow"> -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="revisit-after" content="1 days" />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://citrapix.vercel.app/" />
+        <meta property="twitter:title" content="CitraPix | Aplikasi Pengolahan Citra" />
+        <meta
+            property="twitter:description"
+            content="CitraPix adalah sebuah aplikasi pengolah citra berbasis web app yang dikhususkan untuk mengubah dan mengatur pemrosesan dalam gambar, layaknya seperti aplikasi editing pada umumnya."
+        />
+        <meta
+            property="twitter:image"
+            content="https://github.com/RzCodez/rzcodez.github.io/blob/main/og-image/20240209_192329_hero.png?raw=true"
+        />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://citrapix.vercel.app/" />
+        <meta property="og:title" content="CitraPix | Aplikasi Pengolahan Citra" />
+        <meta
+            property="og:description"
+            content="CitraPix adalah sebuah aplikasi pengolah citra berbasis web app yang dikhususkan untuk mengubah dan mengatur pemrosesan dalam gambar, layaknya seperti aplikasi editing pada umumnya."
+        />
+        <meta
+            property="og:image"
+            content="https://github.com/RzCodez/rzcodez.github.io/blob/main/og-image/20240209_192329_hero.png?raw=true"
+        />
+
+        <meta name="author" content="Kafka Ramadityo" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,700;0,800;1,800&display=swap"
+            rel="stylesheet"
+        />
+        <!-- <link
+            rel="stylesheet"
+            type="text/css"
+            href="{{ url_for('static',filename='style.css') }}"
+        /> -->
+        <link rel="stylesheet" href="../static/style.css" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    screens: {
+                        "wide-desktop": { max: "1535px" },
+                        "med-desktop": { max: "1279px" },
+                        "min-desktop": { max: "1023px" },
+                        tablet: { max: "767px" },
+                        mobile: { max: "639px" },
+                    },
+                },
+            };
+        </script>
+
+        <title>CitraPix | Aplikasi Pengolahan Citra</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+        <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+    </head>
+    <body>
+        
+    </body>
 </html>
