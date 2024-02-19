@@ -19,8 +19,8 @@ def deblurring():
     if request.method == "POST":
         input_image = request.files['input_image']
 
-        # input_image_path = os.path.join(app.config['UPLOAD_FOLDER'], input_image.filename)
-        # input_image.save(input_image_path)
+        input_image_path = os.path.join(app.config['UPLOAD_FOLDER'], input_image.filename)
+        input_image.save(input_image_path)
         gaussian_blur = request.form.get("gaussian")
         motion_blur = request.form.get("motion")
         lens_blur = request.form.get("lensblur")
@@ -28,9 +28,9 @@ def deblurring():
         print("Gaussian Blur:", gaussian_blur)
         print("Motion Blur:", motion_blur)
         print("Lens Blur:", lens_blur)
-        # print("Input Image:", input_image_path)
+        print("Input Image:", input_image_path)
 
-        # image = cv2.imread(input_image_path)
+        image = cv2.imread(input_image_path)
         if(gaussian_blur):
             gaussian_blur = cv2.GaussianBlur(image,(7,7),3)
             return render_template("deblurring.html", result="Gaussian Blur", gaussian=gaussian_blur)
