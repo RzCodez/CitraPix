@@ -47,9 +47,8 @@ def deblurring():
 
 # wsgi.py lol
 # from app import app
-
-if __name__ == '__main__':
-    app.run(debug=False)
+# if __name__ == '__main__':
+#     app.run(debug=False)
 
 
 # index.py
