@@ -43,3 +43,14 @@ def deblurring():
     
     # Jika metode adalah GET, tampilkan halaman deblurring.html seperti biasa
     return render_template("deblurring.html")
+
+
+# wsgi.py lol
+# from app import app
+
+if __name__ == '__main__':
+    app.run(debug=False)
+
+
+# index.py
+# from wsgi import app
