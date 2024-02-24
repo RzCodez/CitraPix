@@ -31,7 +31,6 @@ pycairo==1.26.0
 PyGObject==3.42.1
 PyJWT==2.3.0
 pyparsing==2.4.7
-python-apt==2.4.0+ubuntu2
 python-dateutil==2.8.2
 PyYAML==5.4.1
 reportlab==4.1.0
