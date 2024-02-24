@@ -1,6 +1,5 @@
 blinker==1.7.0
 click==8.1.7
-command-not-found==0.3
 contourpy==1.2.0
 cryptography==3.4.8
 cycler==0.12.1
