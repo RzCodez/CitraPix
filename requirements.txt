@@ -26,6 +26,7 @@ oauthlib==3.2.0
 opencv-python==4.9.0.80
 packaging==23.2
 pillow==10.2.0
+pycairo==1.26.0
 PyGObject==3.42.1
 PyJWT==2.3.0
 pyparsing==2.4.7
