@@ -1,4 +1,4 @@
-![](assets/20240209_192329_hero.png)
+![](cover.png)
 
 # CitraPix
 
