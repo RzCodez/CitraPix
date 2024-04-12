@@ -75,3 +75,98 @@ blurSelect.forEach((el, index) => {
         console.log(dataBlurAtribute);
     };
 });
+
+const checkFace = document.getElementById("check-face");
+const faceOption = document.querySelector(".face-option-ct");
+faceOption.style.display = "none";
+faceOption.style.opacity = 0;
+checkFace.addEventListener("click", () => {
+    if (checkFace.checked == true) {
+        faceOption.style.display = "flex";
+        setTimeout(() => {
+            faceOption.style.opacity = 1;
+        }, 300);
+    } else {
+        faceOption.style.opacity = 0;
+        setTimeout(() => {
+            faceOption.style.display = "none";
+        }, 300);
+    }
+});
+
+const faceSelect = document.querySelectorAll(".face-option");
+
+faceSelect.forEach((el, index) => {
+    const selectInput = faceSelect[index].querySelector("input[type='radio']");
+    el.onclick = () => {
+        faceSelect.forEach((el) => {
+            el.classList.remove("bg-blue-500/10", "border-blue-500");
+            el.querySelector("input[type='radio']").checked = false;
+        });
+        selectInput.checked = true;
+        faceSelect[index].classList.add("bg-blue-500/10", "border-blue-500");
+
+        const dataBlurAtribute = selectInput.getAttribute("data-blur");
+        console.log(dataBlurAtribute);
+    };
+});
+
+// Delete image after blurring image
+
+function deleteImage() {
+    const deleteButton = document.querySelector(".delete-button");
+    const imageResultContainer = document.querySelector(".image-result-container");
+    const imageResult = imageResultContainer.querySelector("img");
+    deleteButton.onclick = () => {
+        // imageResult.src = "";
+        imageResult.remove();
+    };
+}
+
+deleteImage();
+
+function downloadImage() {
+    const downloadImage = document.querySelector(".download-button");
+    const imageResultContainer = document.querySelector(".image-result-container");
+    const imageResult = imageResultContainer.querySelector("img");
+
+    downloadImage.onclick = () => {
+        const imageSrc = imageResult.src;
+        // const imageSrc = imageResult ? imageResult.src : null;
+        if (imageSrc && imageSrc !== "") {
+            const imageName = imageSrc.substring(imageSrc.lastIndexOf("/") + 1);
+            const anchor = document.createElement("a");
+            anchor.href = imageSrc;
+            anchor.download = imageName;
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+        } else if (imageSrc === "") {
+            alert("Silahkan pilih gambar terlebih dahulu");
+            Toastify({
+                text: "Gambar tidak tersedia/dihapus!",
+                duration: 3000,
+                destination: "https://github.com/apvarun/toastify-js",
+                newWindow: true,
+                close: true,
+                gravity: "bottom", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "linear-gradient(to right, #00b09b, #96c93d)",
+                },
+                onClick: function () {}, // Callback after click
+            }).showToast();
+        }
+    };
+
+    const observer = new MutationObserver(() => {
+        if (!imageResult.getAttribute("src")) {
+            downloadImage.onclick = null;
+        }
+    });
+
+    observer.observe(imageResult, { attributes: true });
+}
+
+downloadImage();

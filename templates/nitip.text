@@ -1,0 +1,6 @@
+
+src="{{ url_for('static', filename='uploads/' + image) }}"
+
+{% if image %}
+<img src="" alt="Uploaded Image" class="w-full h-full obj" />
+{% endif %}
