@@ -56,14 +56,11 @@ def blurring():
 
             fl = FaceLandmarks()
 
-            # Load image
             image = cv2.imread(file_path)
             height, width, _ = image.shape
 
-            # Inisialisasi mask
             mask = np.zeros((height, width), np.uint8)
 
-            # Deteksi wajah
             landmarks = fl.get_facial_landmarks(image)
             convexhull = cv2.convexHull(landmarks)
             cv2.fillConvexPoly(mask, convexhull, 255)
@@ -75,7 +72,7 @@ def blurring():
                 if face_detect_on:
 
                     if face_only:
-                        image_blur = cv2.GaussianBlur(image, (27, 27), 0)  # Gunakan Gaussian Blur untuk menghaluskan tepi
+                        image_blur = cv2.GaussianBlur(image, (27, 27), 0) 
                         face_extracted = cv2.bitwise_and(image_blur, image_blur, mask=mask)
                         background_mask = cv2.bitwise_not(mask)
                         background = cv2.bitwise_and(image, image, mask=background_mask)
@@ -83,21 +80,19 @@ def blurring():
                         cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), result)
                     
                     elif face_invert:
-                        # Blur seluruh gambar kecuali wajah
-                        image_blur = cv2.GaussianBlur(image, (27, 27), 0)  # Gunakan Gaussian Blur untuk menghaluskan tepi
+                        image_blur = cv2.GaussianBlur(image, (27, 27), 0)
                         face_without_blur = cv2.bitwise_and(image, image, mask=mask)
                         background_mask = cv2.bitwise_not(mask)
                         background_blur = cv2.bitwise_and(image_blur, image_blur, mask=background_mask)
                         result = cv2.add(background_blur, face_without_blur)
                         cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), result)
                 else:
-                    image_blur = cv2.GaussianBlur(image, (27, 27), 0)  # Gunakan Gaussian Blur untuk menghaluskan tepi
+                    image_blur = cv2.GaussianBlur(image, (27, 27), 0)
                     cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), image_blur)
 
                 return render_template("blur.html", result="Gaussian Blur", image="blurred_" + filename)
 
             if motion_blur:
-                # Apply motion blur here
                 print("You've choosen motion blur!")
                 print("Creating motion blur...")
                 return render_template("blur.html", result="Motion Blur")
@@ -121,11 +116,45 @@ def rgb_img():
             return redirect(request.url)
 
         if file and allowed_file(file.filename):
-            # filename = secure_filename(file.filename)
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
+
+            red = int(request.form.get("red"))
+            green = int(request.form.get("green"))
+            blue = int(request.form.get("blue"))
+
+            # print(red, green, blue)
+
+            image = Image.open(file_path)
+            image = image.convert("RGB")
+            width, height = image.size
+
+            for y in range(height):
+                for x in range(width):
+                    r, g, b = image.getpixel((x, y))
+
+                    r_new = min(255, r + red)
+                    g_new = min(255, g + green)
+                    b_new = min(255, b + blue)
+
+                    image.putpixel((x, y), (r_new, g_new, b_new))
+            
+            # image.save('rgb_' + filename)
+            # cv2.imwrite('rgb_' + filename, cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
+            cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], 'rgb_' + filename), cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
+
+            return render_template("rgb.html", image=filename, image_output='rgb_' + filename)
+
+            
     return render_template("rgb.html")
+
+
+@app.route("/adjustment", methods=["GET", "POST"])
+def adjustment():
+    
+    
+    return render_template("adjustment.html")
 
 
 if __name__ == "__main__":

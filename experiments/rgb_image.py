@@ -1,33 +1,49 @@
 from PIL import Image
+import matplotlib.pyplot as plt
+import cv2
+import numpy as np
 
-# Baca gambar
+###############################################
+#                                             #
+#               USER ENTRIES                  #
+#                                             #
+###############################################
+
+merah = int(input("Merah value: "))
+hijau = int(input("Hijau value: "))
+biru = int(input("Biru value: "))
+
+###############################################
+#                                             #
+#                PREPARATION                  #
+#                                             #
+###############################################
+
 image = Image.open("sample.jpg")
-
-# Ubah mode gambar ke "RGB" (jika tidak sudah)
 image = image.convert("RGB")
-
-# Ukuran gambar
 width, height = image.size
 
-# Ubah setiap pixel dalam gambar
 for y in range(height):
     for x in range(width):
-        # Dapatkan nilai RGB pixel saat ini
         r, g, b = image.getpixel((x, y))
-        
-        # # Cetak nilai RGB
-        # print(f"Nilai RGB pada piksel ({x}, {y}):")
-        # print("Red:", r)
-        # print("Green:", g)
-        # print("Blue:", b)
 
-        # Manipulasi nilai RGB
-        r_new = 19
-        g_new = 60
-        b_new = 255
+        r_new = min(255, r + merah)
+        g_new = min(255, g + hijau)
+        b_new = min(255, b + biru)
 
-        # Atur nilai RGB pixel saat ini
         image.putpixel((x, y), (r_new, g_new, b_new))
 
-# # Simpan gambar yang telah dimanipulasi
-# image.save("output.jpg")
+image.save("output.jpg")
+cv2.imwrite("output.jpg", cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
+
+###############################################
+#                                             #
+#                MAIN PROGRAM                 #
+#                                             #
+###############################################
+
+# output = cv2.imread("output.jpg")
+# output = cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
+
+# plt.imshow(output)
+# plt.show()

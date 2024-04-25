@@ -98,6 +98,40 @@ img {
     filter: blur(30px);
 } */
 
+
+.button-pulse-child{
+    position: absolute;
+    /* inset: 0; */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    width: 5rem;
+    height: 5rem;
+    z-index: 1;
+    border-radius: 50%;
+    background: #3B82F6;
+    /* background: yellow; */
+}
+
+.button-ct:hover .button-pulse-child{
+    animation: ping-animation 1s cubic-bezier(0, 0, 0.2, 1) forwards;
+    
+}
+
+@keyframes ping-animation{
+    from{
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    to{
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+
+
+
 /**************************\
   Basic Modal Styles
 \**************************/
