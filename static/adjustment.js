@@ -60,9 +60,9 @@ inputFoto.onchange = (e) => {
     });
 
     fileReader.onerror = (error) => {
-        console.error('Error reading the file:', error);
+        console.error("Error reading the file:", error);
     };
-    
+
     fileReader.onload = (e) => {
         imagePreview.style.backgroundImage = `url(${e.target.result})`;
         console.log(e.target.result);
@@ -86,3 +86,20 @@ function deleteImage() {
 }
 
 deleteImage();
+
+function getRangeValue() {
+    const rangeInput = document.querySelectorAll(".range-ct input[type=range]"),
+        rangeValue = document.querySelectorAll(".range-ct .label-range input[type=text]");
+
+    rangeInput.forEach((input, i) => {
+        input.addEventListener("input", () => {
+            rangeValue[i].value = input.value;
+
+            var refinedValue = rangeValue[i].value;
+
+            console.log(refinedValue);
+        });
+    });
+}
+
+getRangeValue();

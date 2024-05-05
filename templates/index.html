@@ -85,16 +85,16 @@
             </div>
         </div>
 
-        <h1 class="text-3xl med-desktop:text-xl min-desktop:text-lg text-center py-8 slide-up">Silakan pilih mode edit gambar di bawah!</h1>
+        <h1 class="py-8 text-3xl text-center med-desktop:text-xl min-desktop:text-lg slide-up">Silakan pilih mode edit gambar di bawah!</h1>
 
         <!-- Menu contents -->
         <div class="relative w-full">
             <div class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-7 w-4/5 mx-auto justify-center">
                 <div class="slide-up">
-                    <div class="bg-white border-2 border-blue-500 group hover:scale-105 hover:shadow-xl transition-all rounded-xl">
+                    <div class="transition-all bg-white border-2 border-blue-500 group hover:scale-105 hover:shadow-xl rounded-xl">
                         <a href="/blur" class="block w-full h-full">
-                            <div class="w-full h-52 overflow-hidden">
-                                <img src="../static/images/menu/blur.png" alt="deblurring" class="group-hover:scale-110 group-hover:rotate-3 transition-all ease-out object-cover h-full w-full" />
+                            <div class="w-full overflow-hidden h-52">
+                                <img src="../static/images/menu/blur.png" alt="deblurring" class="object-cover w-full h-full transition-all ease-out group-hover:scale-110 group-hover:rotate-3" />
                             </div>
                             <div class="w-full p-3">
                                 <p>Blur Image Tool</p>
@@ -103,23 +103,24 @@
                     </div>
                 </div>
                 <div class="slide-up">
-                    <div class=" bg-white border-2 border-blue-500 group hover:scale-105 hover:shadow-xl transition-all rounded-xl">
-                        <a href="#" class="block w-full h-full">
-                            <div class="w-full h-52 overflow-hidden">
-                                <img src="../static/images/menu/sharp.png" alt="sharpening" class="group-hover:scale-110 group-hover:rotate-3 transition-all ease-out object-cover h-full w-full" />
+                    <div class="transition-all bg-white border-2 border-blue-500 group hover:scale-105 hover:shadow-xl rounded-xl">
+                        <a href="/sharp" class="block w-full h-full">
+                            <div class="relative w-full overflow-hidden h-52">
+                                <span class="absolute top-0 right-0 z-50 p-2 py-1 text-xs font-bold text-white bg-blue-700 rounded-md">ANIME ONLY</span>
+                                <img src="../static/images/menu/sharp.png" alt="sharpening" class="object-cover w-full h-full transition-all ease-out group-hover:scale-110 group-hover:rotate-3" />
                             </div>
                             <div class="w-full p-3">
-                                <p>Sharp Image Tool</p>
+                                <p class="relative w-max">Sharp Image Tool</p>
                             </div>
                         </a>
                     </div>
                 </div>
 
                 <div class="slide-up">
-                    <div class=" bg-white border-2 border-blue-500 group hover:scale-105 hover:shadow-xl transition-all rounded-xl">
+                    <div class="transition-all bg-white border-2 border-blue-500 group hover:scale-105 hover:shadow-xl rounded-xl">
                         <a href="/rgb" class="block w-full h-full">
-                            <div class="w-full h-52 overflow-hidden">
-                                <img src="../static/images/menu/rgb.png" alt="RGB Filter" class="group-hover:scale-110 group-hover:rotate-3 transition-all ease-out object-cover h-full w-full" />
+                            <div class="w-full overflow-hidden h-52">
+                                <img src="../static/images/menu/rgb.png" alt="RGB Filter" class="object-cover w-full h-full transition-all ease-out group-hover:scale-110 group-hover:rotate-3" />
                             </div>
                             <div class="w-full p-3">
                                 <p>RGB Filter Tool</p>
@@ -129,10 +130,10 @@
                 </div>
 
                 <div class="slide-up">
-                    <div class="bg-white border-2 border-blue-500 group hover:scale-105 hover:shadow-xl transition-all rounded-xl">
+                    <div class="transition-all bg-white border-2 border-blue-500 group hover:scale-105 hover:shadow-xl rounded-xl">
                         <a href="/adjustment" class="block w-full h-full">
-                            <div class="w-full h-52 overflow-hidden">
-                                <img src="../static/images/menu/adjustment.png" alt="Adjustment tools" class="group-hover:scale-110 group-hover:rotate-3 transition-all ease-out object-cover h-full w-full" />
+                            <div class="w-full overflow-hidden h-52">
+                                <img src="../static/images/menu/adjustment.png" alt="Adjustment tools" class="object-cover w-full h-full transition-all ease-out group-hover:scale-110 group-hover:rotate-3" />
                             </div>
                             <div class="w-full p-3">
                                 <p>Adjustment Tool</p>
@@ -145,7 +146,7 @@
         <!-- Menu contents -->
 
         <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
-            <div class="modal__overlay px-5" tabindex="-1" data-micromodal-close>
+            <div class="px-5 modal__overlay" tabindex="-1" data-micromodal-close>
                 <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
                     <header class="modal__header">
                         <h2 class="modal__title" id="modal-1-title">Selamat datang! 👋</h2>

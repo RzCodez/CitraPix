@@ -11,8 +11,12 @@ from werkzeug.utils import secure_filename
 import os
 import cv2
 import numpy as np
+from PIL import Image, ImageEnhance
+import subprocess
+
+# LIBRARY FILE SENDIRI
 from facial_landmarks import FaceLandmarks
-from PIL import Image
+
 
 app = Flask(__name__, static_folder="./static", template_folder="./templates")
 
@@ -23,6 +27,17 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def adjust_hue_pil(image_path, hue_factor):
+    img = Image.open(image_path)
+    hsv = img.convert('HSV')
+
+    hue = hsv.split()[0]
+    hue = hue.point(lambda p: (p + hue_factor * 255) % 256)
+    
+    new_img = Image.merge('HSV', (hue, hsv.split()[1], hsv.split()[2]))
+    return new_img.convert('RGB')
 
 @app.route("/")
 def home():
@@ -124,8 +139,6 @@ def rgb_img():
             green = int(request.form.get("green"))
             blue = int(request.form.get("blue"))
 
-            # print(red, green, blue)
-
             image = Image.open(file_path)
             image = image.convert("RGB")
             width, height = image.size
@@ -139,9 +152,7 @@ def rgb_img():
                     b_new = min(255, b + blue)
 
                     image.putpixel((x, y), (r_new, g_new, b_new))
-            
-            # image.save('rgb_' + filename)
-            # cv2.imwrite('rgb_' + filename, cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
+
             cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], 'rgb_' + filename), cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
 
             return render_template("rgb.html", image=filename, image_output='rgb_' + filename)
@@ -152,9 +163,122 @@ def rgb_img():
 
 @app.route("/adjustment", methods=["GET", "POST"])
 def adjustment():
-    
+
+    if request.method == "POST":
+        if 'image' not in request.files:
+            return redirect(request.url)
+
+        file = request.files['image']
+
+        if file.filename == '':
+            return redirect(request.url)
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+
+            #######################################################
+            #                    USER ENTRIES                     #
+            #######################################################
+
+            new_image = Image.open(file_path)
+            temp_image_path = f"temp_{filename}"
+
+            brightness = request.form.get("brightness")
+            contrast = request.form.get("contrast")
+            hue = request.form.get("hue")
+            saturation = request.form.get("saturation")
+
+            brightnessFac = float(brightness)
+            contrastFac = float(contrast)
+            hueFac = float(hue)
+            saturationFac = float(saturation)
+
+            # MENGECEK APAKAH FILE BERHASIL DIUPLOAD
+            print(file_path, ", Temp image:", temp_image_path)
+
+
+
+            ################ BRIGHTNESS ################
+
+            # Min 0, default 1, max 10
+            brightnessFilter = ImageEnhance.Brightness(new_image)
+
+            temp_edited_image = brightnessFilter.enhance(brightnessFac)
+            temp_edited_image.save(temp_image_path)
+            
+            ################ CONTRAST ################
+            
+            # Min 0, default 1, max 10
+            temp_new_image_contrast = Image.open(temp_image_path)
+            contrastFilter = ImageEnhance.Contrast(temp_new_image_contrast)
+
+            temp_edited_image = contrastFilter.enhance(contrastFac)
+            temp_edited_image.save(temp_image_path)
+
+            # ################ SATURATION ################
+
+            # Min 0, default 1, max 10
+            temp_new_image_saturation = Image.open(temp_image_path)
+            saturationFilter = ImageEnhance.Color(temp_new_image_saturation)
+
+            temp_edited_image = saturationFilter.enhance(saturationFac)
+            temp_edited_image.save(temp_image_path)
+
+            # ############### HUE COLOR ################
+
+            # Min 0, default 1, max 10
+            temp_edited_image = adjust_hue_pil(temp_image_path, hueFac)
+
+            cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], 'adjust_' + filename), cv2.cvtColor(np.array(temp_edited_image), cv2.COLOR_RGB2BGR))
+            os.remove(temp_image_path)
+
+            return render_template("adjustment.html", image=filename, image_output="adjust_" + filename)
     
     return render_template("adjustment.html")
+
+@app.route("/sharp", methods=["GET", "POST"])
+def sharp():
+    if request.method == "POST":
+        if 'image' not in request.files:
+            return redirect(request.url)
+
+        file = request.files['image']
+
+        if file.filename == '':
+            return redirect(request.url)
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+
+            ########################################################
+            #                     USER ENTRIES                     #
+            ########################################################
+            input_path = file_path
+            output_path = f"temp_upscaled_{filename}"
+
+            model_name = "realesrgan-x4plus-anime"
+
+            command = ["realesrgan-ncnn-vulkan.exe", "-i", input_path, "-o", output_path, "-n", model_name]
+
+            subprocess.run(command)
+            upscaled_image = cv2.imread(output_path)
+
+            cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], 'upscaled_' + filename), upscaled_image)
+
+
+            os.remove(output_path)
+
+            return render_template("sharp.html", image=filename, image_output="upscaled_" + filename)
+
+
+
+
+
+    return render_template("sharp.html")
 
 
 if __name__ == "__main__":
