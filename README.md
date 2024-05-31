@@ -13,7 +13,7 @@ Kami akan mengembangkan aplikasi CitraPix dengan berbagai fitur, seperti:
 * [X] Deblurring Image
 * [X] Image Scalling
 * [X] Image Filters
-* [ ] Image Adjustments (Masih direncanakan)
+* [X] Image Adjustments (Masih direncanakan)
 
 ### 3. Tech yang digunakan
 
