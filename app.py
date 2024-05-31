@@ -48,33 +48,14 @@ def motion_blur_effect(img, blur_length, angle):
     imfilt = cv2.filter2D(img, -1, psf)
     return imfilt
 
-# def lens_blur(img, blur_):
-
-
-# def motion_blur_effect(img, blur_length, angle):
-#     psf = np.zeros((50, 50, 3))
-#     psf = cv2.ellipse(psf, 
-#                     (25, 25),
-#                     (blur_length, blur_length),
-#                     angle,
-#                     0, 360,
-#                     (1, 1, 1),
-#                     thickness=-1)
-
-#     psf /= psf[:,:,0].sum() 
-
-#     imfilt = cv2.filter2D(img, -1, psf)
-#     return imfilt
-
-# def motion_blur_effect(image, size, angle):
-#     k = cv2.getGaussianKernel(size, -1)
-#     psf = k @ k.T
-#     center = (psf.shape[0] // 2, psf.shape[1] // 2)
-#     rot_mat = cv2.getRotationMatrix2D(center, angle, 1.0)
-#     psf = cv2.warpAffine(psf, rot_mat, (psf.shape[0], psf.shape[1]))
-#     psf = psf / psf.sum()
-#     blurred = cv2.filter2D(image, -1, psf)
-#     return blurred
+def get_face_mask(image, landmarks):
+    height, width, _ = image.shape
+    mask = np.zeros((height, width), np.uint8)
+    if len(landmarks) == 0:
+        return None
+    convexhull = cv2.convexHull(landmarks)
+    cv2.fillConvexPoly(mask, convexhull, 255)
+    return mask
 
 @app.route("/")
 def home():
@@ -125,11 +106,11 @@ def blurring():
 
                 if face_detect_on:
                     
-                    mask = np.zeros((height, width), np.uint8)
-
                     landmarks = fl.get_facial_landmarks(image)
-                    convexhull = cv2.convexHull(landmarks)
-                    cv2.fillConvexPoly(mask, convexhull, 255)
+                    mask = get_face_mask(image, landmarks)
+
+                    if mask is None:
+                        return render_template("blur.html", result="Tidak terdeteksi wajah!")
 
                     if face_only:
                         image_blur = cv2.GaussianBlur(image, (27, 27), 0) 
@@ -158,11 +139,11 @@ def blurring():
 
                 if face_detect_on:
                     
-                    mask = np.zeros((height, width), np.uint8)
-
                     landmarks = fl.get_facial_landmarks(image)
-                    convexhull = cv2.convexHull(landmarks)
-                    cv2.fillConvexPoly(mask, convexhull, 255)
+                    mask = get_face_mask(image, landmarks)
+
+                    if mask is None:
+                        return render_template("blur.html", result="Tidak terdeteksi wajah!")
 
                     if face_only:
                         # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
@@ -193,12 +174,12 @@ def blurring():
                 print("Creating lens blur...")
 
                 if face_detect_on:
-                    
-                    mask = np.zeros((height, width), np.uint8)
 
                     landmarks = fl.get_facial_landmarks(image)
-                    convexhull = cv2.convexHull(landmarks)
-                    cv2.fillConvexPoly(mask, convexhull, 255)
+                    mask = get_face_mask(image, landmarks)
+
+                    if mask is None:
+                        return render_template("blur.html", result="Tidak terdeteksi wajah!")
 
                     if face_only:
                         # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
