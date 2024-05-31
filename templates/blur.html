@@ -105,6 +105,15 @@
                                 <p class="absolute -translate-x-1/2 -translate-y-1/2 placeholder top-1/2 left-1/2" aria-hidden="true">
                                     Your preview image here
                                 </p>
+
+                                {% if image %}
+                                <img
+                                    src="{{ url_for('static', filename='uploads/' + image) }}"
+                                    id="old-image"
+                                    class="relative z-20 object-contain w-full h-full"
+                                    alt="old image here"
+                                />
+                                {% endif %}
                             </div>
                         </div>
 
@@ -174,7 +183,7 @@
 
                             <input type="submit" value="Edit sekarang!" class="p-3 text-white bg-blue-500 rounded-md cursor-pointer" />
 
-                            <p>Hasil pilihan: {{ result }}</p>
+                            <p>{{ result }}</p>
                         </div>
 
                         <!-- Result image -->
@@ -201,7 +210,7 @@
                             >
                                 {% if image %}
                                 <img
-                                    src="{{ url_for('static', filename='uploads/' + image) }}"
+                                    src="{{ url_for('static', filename='uploads/' + image_output) }}"
                                     alt="Uploaded Image"
                                     class="object-contain w-full h-full image_result"
                                 />

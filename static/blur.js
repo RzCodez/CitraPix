@@ -32,12 +32,20 @@ window.addEventListener("load", () => {
     });
 });
 
+
 const imagePreview = document.querySelector(".imagePreview"),
-    inputFoto = document.querySelector("#input-foto");
+    inputFoto = document.querySelector("#input-foto"),
+    oldImage = document.getElementById("old-image");
+
+inputFoto.value = "";
 
 let preview = gsap.timeline();
 inputFoto.onchange = (e) => {
     let fileReader = new FileReader();
+    // if(inputFoto.files.length > 0) {
+    //     oldImage.style.display = "none";
+    // }
+    // oldImage.style.display = "none";
     preview.restart();
     preview.to(".placeholder", {
         color: "white",
@@ -51,9 +59,18 @@ inputFoto.onchange = (e) => {
         duration: 0.5,
         ease: "power1.out",
     });
+
+    fileReader.onerror = (error) => {
+        console.error("Error reading the file:", error);
+    };
+
     fileReader.onload = (e) => {
         imagePreview.style.backgroundImage = `url(${e.target.result})`;
         console.log(e.target.result);
+        if (e.target.result) {
+            oldImage.classList.add("hidden");
+            // alert("Gambar diupload! Menghapus old image...")
+        }
     };
 
     fileReader.readAsDataURL(e.target.files[0]);

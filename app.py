@@ -91,14 +91,9 @@ def blurring():
             angle = request.form.get("angle")
             radius = request.form.get("radius")
 
-
-
-
             fl = FaceLandmarks()
 
-
             image = cv2.imread(file_path)
-            height, width, _ = image.shape
 
             if gaussian_blur:
                 print("You've choosen Gaussian Blur!")
@@ -131,7 +126,7 @@ def blurring():
                     image_blur = cv2.GaussianBlur(image, (27, 27), 0)
                     cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), image_blur)
 
-                return render_template("blur.html", result="Gaussian Blur", image="blurred_" + filename)
+                return render_template("blur.html", result="Success!", image=filename, image_output="blurred_" + filename)
 
             if motion_blur_option:
                 print("You've choosen Motion Blur!")
@@ -146,8 +141,7 @@ def blurring():
                         return render_template("blur.html", result="Tidak terdeteksi wajah!")
 
                     if face_only:
-                        # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
-                        image_blur = motion_blur_effect(image, 50, angle)
+                        image_blur = motion_blur_effect(image, 100, angle)
                         face_extracted = cv2.bitwise_and(image_blur, image_blur, mask=mask)
                         background_mask = cv2.bitwise_not(mask)
                         background = cv2.bitwise_and(image, image, mask=background_mask)
@@ -155,7 +149,6 @@ def blurring():
                         cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), result)
                     
                     elif face_invert:
-                        # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
                         image_blur = motion_blur_effect(image, 100, angle)
                         face_without_blur = cv2.bitwise_and(image, image, mask=mask)
                         background_mask = cv2.bitwise_not(mask)
@@ -163,11 +156,10 @@ def blurring():
                         result = cv2.add(background_blur, face_without_blur)
                         cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), result)
                 else:
-                    # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
                     image_blur = motion_blur_effect(image, 10000, angle)
                     cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), image_blur)
 
-                return render_template("blur.html", result="Motion Blur", image="blurred_" + filename)
+                return render_template("blur.html", result="Success!", image=filename, image_output="blurred_" + filename)
 
             if lens_blur:
                 print("You've choosen Lens Blur!")
@@ -182,7 +174,6 @@ def blurring():
                         return render_template("blur.html", result="Tidak terdeteksi wajah!")
 
                     if face_only:
-                        # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
                         image_blur = lensblur.apply_lens_blur(file_path, int(radius)) # (image, radius)
                         face_extracted = cv2.bitwise_and(image_blur, image_blur, mask=mask)
                         background_mask = cv2.bitwise_not(mask)
@@ -191,7 +182,6 @@ def blurring():
                         cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), result)
                     
                     elif face_invert:
-                        # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
                         image_blur = lensblur.apply_lens_blur(file_path, int(radius)) # (image, radius)
                         face_without_blur = cv2.bitwise_and(image, image, mask=mask)
                         background_mask = cv2.bitwise_not(mask)
@@ -199,11 +189,10 @@ def blurring():
                         result = cv2.add(background_blur, face_without_blur)
                         cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), result)
                 else:
-                    # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
                     image_blur = lensblur.apply_lens_blur(file_path, int(radius)) # (image, radius)
                     cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), image_blur)
 
-                return render_template("blur.html", result="Lens Blur", image="blurred_" + filename)
+                return render_template("blur.html", result="Success!", image=filename, image_output="blurred_" + filename)
 
     return render_template("blur.html")
 
@@ -245,7 +234,6 @@ def rgb_img():
 
             return render_template("rgb.html", image=filename, image_output='rgb_' + filename)
 
-            
     return render_template("rgb.html")
 
 
@@ -285,8 +273,6 @@ def adjustment():
 
             # MENGECEK APAKAH FILE BERHASIL DIUPLOAD
             print(file_path, ", Temp image:", temp_image_path)
-
-
 
             ################ BRIGHTNESS ################
 
