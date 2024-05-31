@@ -16,6 +16,7 @@ import subprocess
 
 # LIBRARY FILE SENDIRI
 from facial_landmarks import FaceLandmarks
+from blur_function import lensblur
 
 
 app = Flask(__name__, static_folder="./static", template_folder="./templates")
@@ -39,6 +40,42 @@ def adjust_hue_pil(image_path, hue_factor):
     new_img = Image.merge('HSV', (hue, hsv.split()[1], hsv.split()[2]))
     return new_img.convert('RGB')
 
+def motion_blur_effect(img, blur_length, angle):
+    angle = float(angle)
+    psf = np.zeros((50, 50, 3))
+    psf = cv2.ellipse(psf, (25, 25), (blur_length, 0), angle, 0, 360, (1, 1, 1), thickness=-1)
+    psf /= psf[:,:,0].sum() 
+    imfilt = cv2.filter2D(img, -1, psf)
+    return imfilt
+
+# def lens_blur(img, blur_):
+
+
+# def motion_blur_effect(img, blur_length, angle):
+#     psf = np.zeros((50, 50, 3))
+#     psf = cv2.ellipse(psf, 
+#                     (25, 25),
+#                     (blur_length, blur_length),
+#                     angle,
+#                     0, 360,
+#                     (1, 1, 1),
+#                     thickness=-1)
+
+#     psf /= psf[:,:,0].sum() 
+
+#     imfilt = cv2.filter2D(img, -1, psf)
+#     return imfilt
+
+# def motion_blur_effect(image, size, angle):
+#     k = cv2.getGaussianKernel(size, -1)
+#     psf = k @ k.T
+#     center = (psf.shape[0] // 2, psf.shape[1] // 2)
+#     rot_mat = cv2.getRotationMatrix2D(center, angle, 1.0)
+#     psf = cv2.warpAffine(psf, rot_mat, (psf.shape[0], psf.shape[1]))
+#     psf = psf / psf.sum()
+#     blurred = cv2.filter2D(image, -1, psf)
+#     return blurred
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -61,7 +98,7 @@ def blurring():
 
             # Mode blur
             gaussian_blur = request.form.get("gaussian")
-            motion_blur = request.form.get("motion")
+            motion_blur_option = request.form.get("motion")
             lens_blur = request.form.get("lensblur")
 
             # Mode fokus muka
@@ -69,22 +106,30 @@ def blurring():
             face_invert = request.form.get("invert")
             face_only = request.form.get("blurface")
 
+            # KHUSUS MOTION BLUR
+            angle = request.form.get("angle")
+            radius = request.form.get("radius")
+
+
+
+
             fl = FaceLandmarks()
+
 
             image = cv2.imread(file_path)
             height, width, _ = image.shape
-
-            mask = np.zeros((height, width), np.uint8)
-
-            landmarks = fl.get_facial_landmarks(image)
-            convexhull = cv2.convexHull(landmarks)
-            cv2.fillConvexPoly(mask, convexhull, 255)
 
             if gaussian_blur:
                 print("You've choosen Gaussian Blur!")
                 print("Creating gaussian blur...")
 
                 if face_detect_on:
+                    
+                    mask = np.zeros((height, width), np.uint8)
+
+                    landmarks = fl.get_facial_landmarks(image)
+                    convexhull = cv2.convexHull(landmarks)
+                    cv2.fillConvexPoly(mask, convexhull, 255)
 
                     if face_only:
                         image_blur = cv2.GaussianBlur(image, (27, 27), 0) 
@@ -107,15 +152,77 @@ def blurring():
 
                 return render_template("blur.html", result="Gaussian Blur", image="blurred_" + filename)
 
-            if motion_blur:
-                print("You've choosen motion blur!")
+            if motion_blur_option:
+                print("You've choosen Motion Blur!")
                 print("Creating motion blur...")
-                return render_template("blur.html", result="Motion Blur")
+
+                if face_detect_on:
+                    
+                    mask = np.zeros((height, width), np.uint8)
+
+                    landmarks = fl.get_facial_landmarks(image)
+                    convexhull = cv2.convexHull(landmarks)
+                    cv2.fillConvexPoly(mask, convexhull, 255)
+
+                    if face_only:
+                        # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
+                        image_blur = motion_blur_effect(image, 50, angle)
+                        face_extracted = cv2.bitwise_and(image_blur, image_blur, mask=mask)
+                        background_mask = cv2.bitwise_not(mask)
+                        background = cv2.bitwise_and(image, image, mask=background_mask)
+                        result = cv2.add(background, face_extracted)
+                        cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), result)
+                    
+                    elif face_invert:
+                        # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
+                        image_blur = motion_blur_effect(image, 100, angle)
+                        face_without_blur = cv2.bitwise_and(image, image, mask=mask)
+                        background_mask = cv2.bitwise_not(mask)
+                        background_blur = cv2.bitwise_and(image_blur, image_blur, mask=background_mask)
+                        result = cv2.add(background_blur, face_without_blur)
+                        cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), result)
+                else:
+                    # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
+                    image_blur = motion_blur_effect(image, 10000, angle)
+                    cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), image_blur)
+
+                return render_template("blur.html", result="Motion Blur", image="blurred_" + filename)
 
             if lens_blur:
-                # Apply lens blur here
+                print("You've choosen Lens Blur!")
+                print("Creating lens blur...")
 
-                return render_template("blur.html", result="Lens Blur")
+                if face_detect_on:
+                    
+                    mask = np.zeros((height, width), np.uint8)
+
+                    landmarks = fl.get_facial_landmarks(image)
+                    convexhull = cv2.convexHull(landmarks)
+                    cv2.fillConvexPoly(mask, convexhull, 255)
+
+                    if face_only:
+                        # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
+                        image_blur = lensblur.apply_lens_blur(file_path, int(radius)) # (image, radius)
+                        face_extracted = cv2.bitwise_and(image_blur, image_blur, mask=mask)
+                        background_mask = cv2.bitwise_not(mask)
+                        background = cv2.bitwise_and(image, image, mask=background_mask)
+                        result = cv2.add(background, face_extracted)
+                        cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), result)
+                    
+                    elif face_invert:
+                        # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
+                        image_blur = lensblur.apply_lens_blur(file_path, int(radius)) # (image, radius)
+                        face_without_blur = cv2.bitwise_and(image, image, mask=mask)
+                        background_mask = cv2.bitwise_not(mask)
+                        background_blur = cv2.bitwise_and(image_blur, image_blur, mask=background_mask)
+                        result = cv2.add(background_blur, face_without_blur)
+                        cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), result)
+                else:
+                    # image_blur = cv2.GaussianBlur(image, (27, 27), 0)
+                    image_blur = lensblur.apply_lens_blur(file_path, int(radius)) # (image, radius)
+                    cv2.imwrite(os.path.join(app.config["UPLOAD_FOLDER"], "blurred_" + filename), image_blur)
+
+                return render_template("blur.html", result="Lens Blur", image="blurred_" + filename)
 
     return render_template("blur.html")
 

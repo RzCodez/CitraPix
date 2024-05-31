@@ -60,6 +60,9 @@ inputFoto.onchange = (e) => {
 };
 
 const blurSelect = document.querySelectorAll(".select-blur");
+const rotateSlider = document.querySelector(".rotate-slider");
+
+rotateSlider.style.display = "none";
 
 blurSelect.forEach((el, index) => {
     const selectInput = blurSelect[index].querySelector("input[type='radio']");
@@ -73,6 +76,36 @@ blurSelect.forEach((el, index) => {
 
         const dataBlurAtribute = selectInput.getAttribute("data-blur");
         console.log(dataBlurAtribute);
+        const slider = document.querySelector("#angle");
+        const motionDirection = document.querySelector(".motion-direction");
+
+        if (dataBlurAtribute == "motion") {
+            // console.log(angle);
+            rotateSlider.style.display = "flex";
+
+            slider.addEventListener("input", () => {
+                const angle = slider.value;
+                const refinedAngle = 90 + (angle % 360);
+
+                motionDirection.style.transform = `rotate(${refinedAngle}deg)`;
+                // console.log(angle);
+            });
+        } else {
+            rotateSlider.style.display = "none";
+            slider.value = 0;
+        }
+
+        const radiusSliderCt = document.getElementById("radius-slider"),
+            radiusSlider = document.getElementById("radius");
+
+        if (dataBlurAtribute == "lensblur") {
+            radiusSliderCt.classList.add("flex");
+            radiusSliderCt.classList.remove("hidden");
+        } else {
+            radiusSliderCt.classList.add("hidden");
+            radiusSliderCt.classList.remove("flex");
+            radiusSlider.value = 0;
+        }
     };
 });
 
@@ -110,6 +143,8 @@ faceSelect.forEach((el, index) => {
         console.log(dataBlurAtribute);
     };
 });
+
+// const lensBlurOption = document.querySelector("")
 
 // Delete image after blurring image
 

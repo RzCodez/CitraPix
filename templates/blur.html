@@ -42,7 +42,8 @@
             href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,700;0,800;1,800&display=swap"
             rel="stylesheet"
         />
-        <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
         <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet" />
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
@@ -74,8 +75,8 @@
     </head>
     <body>
         <nav class="w-full h-16 bg-[#2F549D] fixed top-0 left-0 z-50 flex text-white">
-            <span class="progress-load bg-blue-500" style="height: 2px"></span>
-            <div class="mx-auto w-3/4 mobile:w-full flex items-center justify-between">
+            <span class="bg-blue-500 progress-load" style="height: 2px"></span>
+            <div class="flex items-center justify-between w-3/4 mx-auto mobile:w-full">
                 <img src="../static/images/logo-white.png" width="100px" alt="logo" class="slide" />
                 <p class="text-xl font-bold slide">Blur Image Tool</p>
                 <ul class="flex items-center gap-3">
@@ -91,7 +92,7 @@
         <div class="w-full relative min-h-[100vh] flex">
             <div class="mx-auto my-auto">
                 <form action="{{ url_for('blurring') }}" method="post" enctype="multipart/form-data">
-                    <div class="flex gap-10 flex-wrap">
+                    <div class="flex flex-wrap gap-10">
                         <!-- Importing image -->
 
                         <div class="flex flex-col gap-5">
@@ -100,8 +101,8 @@
                             <div
                                 class="imagePreview overflow-hidden relative w-96 h-[50vh] bg-gray-500/10 border-2 border-black border-dashed rounded-xl bg-center bg-no-repeat bg-contain"
                             >
-                                <div class="blur absolute inset-0" aria-hidden="true"></div>
-                                <p class="placeholder absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" aria-hidden="true">
+                                <div class="absolute inset-0 blur" aria-hidden="true"></div>
+                                <p class="absolute -translate-x-1/2 -translate-y-1/2 placeholder top-1/2 left-1/2" aria-hidden="true">
                                     Your preview image here
                                 </p>
                             </div>
@@ -113,42 +114,65 @@
                             <h1 class="text-3xl font-bold">Pilih mode blur</h1>
                             <p class="text-xl text-black/50">Mode blur masih dalam tahap pengembangan</p>
                             <div class="flex flex-col gap-5">
-                                <div class="transition-all select-blur cursor-pointer flex gap-3 items-center p-3 border rounded-xl">
+                                <div class="flex items-center gap-3 p-3 transition-all border cursor-pointer select-blur rounded-xl">
                                     <input type="radio" name="gaussian" id="gaussian" data-blur="gaussian" />
                                     <p>Gaussian Blur</p>
                                 </div>
-                                <div class="transition-all select-blur cursor-pointer flex gap-3 items-center p-3 border rounded-xl">
-                                    <input type="radio" name="motion" id="motion" data-blur="motion" />
-                                    <p>Motion Blur</p>
+                                <div>
+                                    <div class="flex items-center gap-3 p-3 transition-all border cursor-pointer select-blur rounded-xl">
+                                        <input type="radio" name="motion" id="motion" data-blur="motion" />
+                                        <p>Motion Blur</p>
+                                    </div>
+                                    <div class="flex flex-col justify-between mt-3 rotate-slider">
+                                        <p>Arah motion blur</p>
+                                        <div class="flex items-center justify-between">
+                                            <input type="range" name="angle" id="angle" min="0" max="270" step="1" value="0" class="w-1/2" />
+
+                                            <div class="relative border border-blue-500 rounded-full w-11 h-11">
+                                                <div class="absolute flex items-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                                                    <ion-icon
+                                                        name="arrow-up-outline"
+                                                        class="text-xl text-blue-500 transition-all ease-out motion-direction"
+                                                        style="transform: rotate(90deg);"
+                                                    ></ion-icon>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="transition-all select-blur cursor-pointer flex gap-3 items-center p-3 border rounded-xl">
-                                    <input type="radio" name="lensblur" id="lensblur" data-blur="lensblur" />
-                                    <p>Lens Blur</p>
+                                <div>
+                                    <div class="flex items-center gap-3 p-3 transition-all border cursor-pointer select-blur rounded-xl">
+                                        <input type="radio" name="lensblur" id="lensblur" data-blur="lensblur" />
+                                        <p>Lens Blur</p>
+                                    </div>
+                                    <div class="flex-col hidden gap-2 mt-2" id="radius-slider">
+                                        <p>Blur radius</p>
+                                        <input type="range" name="radius" id="radius" min="0" max="100" step="1" value="0" class="w-full">
+                                    </div>
                                 </div>
                             </div>
                             <div class="face-detection-box">
                                 <p>Face Detection</p>
                                 <div class="flex flex-col divide-y">
-                                    <div class="transition-all flex items-center gap-1 py-3 ">
+                                    <div class="flex items-center gap-1 py-3 transition-all ">
                                         <input type="checkbox" name="face-true" id="check-face" />
                                         <p>On</p>
                                     </div>
 
-                                    <div class="face-option-ct flex gap-3 pt-5 transition-all transition-duration-1000">
-                                        <div class="transition-all face-option cursor-pointer flex gap-3 items-center p-3 border rounded-xl">
+                                    <div class="flex gap-3 pt-5 transition-all face-option-ct transition-duration-1000">
+                                        <div class="flex items-center gap-3 p-3 transition-all border cursor-pointer face-option rounded-xl">
                                             <input type="radio" name="blurface" id="blurface" data-blur="blurface" />
                                             <p>Face only</p>
                                         </div>
-                                        <div class="transition-all face-option cursor-pointer flex gap-3 items-center p-3 border rounded-xl">
+                                        <div class="flex items-center gap-3 p-3 transition-all border cursor-pointer face-option rounded-xl">
                                             <input type="radio" name="invert" id="invert" data-blur="invert" />
                                             <p>Invert <span class="text-xs">(Stay sharp for face)</span></p>
                                         </div>
                                     </div>
-                                    
                                 </div>
                             </div>
 
-                            <input type="submit" value="Edit sekarang!" class="bg-blue-500 rounded-md p-3 text-white cursor-pointer" />
+                            <input type="submit" value="Edit sekarang!" class="p-3 text-white bg-blue-500 rounded-md cursor-pointer" />
 
                             <p>Hasil pilihan: {{ result }}</p>
                         </div>
@@ -157,29 +181,29 @@
 
                         <div class="flex flex-col gap-5">
                             <h1 class="text-3xl font-bold">Hasil gambar</h1>
-                            <div class="flex gap-3 items-center">
+                            <div class="flex items-center gap-3">
                                 <p class="text-xl text-black/50">Hasil gambar akan muncul di sini</p>
-                                <div class="flex gap-1 items-center">
+                                <div class="flex items-center gap-1">
                                     <div
                                         class="download-button w-[30px] h-[30px] flex transition-all bg-green-500 hover:bg-green-600 cursor-pointer rounded-md"
                                     >
-                                        <ion-icon name="download" class="text-xl m-auto text-white"></ion-icon>
+                                        <ion-icon name="download" class="m-auto text-xl text-white"></ion-icon>
                                     </div>
                                     <div
                                         class="delete-button w-[30px] h-[30px] flex transition-all bg-red-500 hover:bg-red-600 cursor-pointer rounded-md"
                                     >
-                                        <ion-icon name="trash" class="text-xl m-auto text-white"></ion-icon>
+                                        <ion-icon name="trash" class="m-auto text-xl text-white"></ion-icon>
                                     </div>
                                 </div>
                             </div>
                             <div
-                                class="image-result-container relative h-[50vh] max-w-xl overflow-hidden rounded-xl border-2 border-dashed border-black bg-gray-500/10"
+                                class="image-result-container relative h-[50vh] w-96 overflow-hidden rounded-xl border-2 border-dashed border-black bg-gray-500/10"
                             >
                                 {% if image %}
                                 <img
                                     src="{{ url_for('static', filename='uploads/' + image) }}"
                                     alt="Uploaded Image"
-                                    class="image_result h-full w-full object-contain"
+                                    class="object-contain w-full h-full image_result"
                                 />
                                 {% endif %}
                             </div>
@@ -190,7 +214,7 @@
         </div>
 
         <div class="modal micromodal-slide" id="modal-2" aria-hidden="true">
-            <div class="modal__overlay px-5" tabindex="-1" data-micromodal-close>
+            <div class="px-5 modal__overlay" tabindex="-1" data-micromodal-close>
                 <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
                     <header class="modal__header">
                         <h2 class="modal__title" id="modal-1-title">Selamat datang! 👋</h2>
